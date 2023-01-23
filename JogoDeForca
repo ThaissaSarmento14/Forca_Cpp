@@ -1,0 +1,221 @@
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string>
+#include <time.h>
+
+using namespace std;
+
+void LimpaTela(){
+	
+	system("CLS");
+}
+
+string RetornaPalavraAnterior(string palavra, int tamanhoDaPalavra){
+	
+	int cont = 0;
+	string palavraEscondida;
+	
+	while(cont < tamanhoDaPalavra){
+		
+		palavraEscondida += "_";
+		cont++;
+	}
+	
+	return palavraEscondida;
+}
+
+string RetornaPalavraAleatoria(string tema){
+	
+	string palavra[3] = {"abacaxi", "manga", "morango"};
+	tema = "Fruta";
+	int indiceAleatorio = rand() % 3;
+	
+	return palavra[indiceAleatorio];
+	cout << "Dica : " << tema;
+}
+
+void exibeStatus(string tema, string palavraEscondida, int tamanhoDaPalavra, int tentativasRestantes, string letraJaArriscadas, string mensagem){
+	
+	cout << mensagem;
+	cout << "\nDica: " << tema;
+	cout << "\n\nPalavra: " << palavraEscondida << " (Tamanho:" << tamanhoDaPalavra << " )" << " - Tentativas Restantes: "<< tentativasRestantes;
+	int cont;
+	
+	cout << "\n\nLetras Arriscadas: ";
+	for(cont = 0; cont < letraJaArriscadas.size(); cont++){
+		cout << letraJaArriscadas[cont] << ", ";
+	}
+}
+
+int jogar(int numeroDeJogadores){
+	
+	
+	string palavra;
+	string tema;
+	
+	if(numeroDeJogadores == 1){
+		
+		palavra = RetornaPalavraAleatoria(tema);
+	}else{
+		cout << "\nDigite uma palavra: ";
+		cin >> palavra;
+		cout << "Digite uma dica: ";
+		cin >> tema;
+	}
+	
+	int tamanhoDaPalavra = palavra.size();
+	
+	string PalavraEscondida = RetornaPalavraAnterior(palavra, tamanhoDaPalavra);
+	
+	int cont = 0, op, tentativas = 0, maxTentativas = 10;
+	char letra;
+	string LetrasJaArriscadas;
+	string mensagem = "Bem Vindo Ao Jogo !";
+	string PalavraJaArriscada;
+	bool JaDigitouLetra = false, AcertouLetra = false;
+	
+	while(palavra != PalavraEscondida && maxTentativas - tentativas > 0){
+		
+		LimpaTela();
+		
+		exibeStatus(tema, PalavraEscondida, tamanhoDaPalavra, maxTentativas - tentativas, LetrasJaArriscadas, mensagem);
+		
+		cout << "\n\nDigite Uma Letra(Ou digite 1 para arriscar a palavra): ";
+		cin >> letra;
+		
+		if (letra == '1'){
+			
+			cout << "\nDigite a Palavra: ";
+			cin >> PalavraJaArriscada;
+			
+			if(PalavraJaArriscada == palavra){
+				
+				PalavraEscondida = PalavraJaArriscada;
+			}else{
+				tentativas = maxTentativas;
+			}
+		}
+		
+		for(cont = 0; cont < tentativas; cont ++){
+			
+			if(LetrasJaArriscadas[cont] == letra){
+				
+				mensagem = "Letra Ja Digitada !";
+				JaDigitouLetra = true;
+			}
+		}
+		
+		if(JaDigitouLetra == false){
+			
+			LetrasJaArriscadas += towlower(letra);
+			
+			for(cont = 0; cont < tamanhoDaPalavra; cont++){
+			
+				if(palavra[cont] == tolower(letra)){
+				
+				PalavraEscondida[cont] = palavra[cont];
+				AcertouLetra = true;
+			}
+				
+			}
+		if(AcertouLetra == false){
+			mensagem = "Letra Incorreta !";
+			tentativas++;
+		}else{
+		    mensagem = "Letra Correta !";
+		}
+	}
+		AcertouLetra = false;
+		JaDigitouLetra = false;
+}
+
+		if(palavra == PalavraEscondida){
+			
+			LimpaTela();
+			cout << "Voce Venceu !!";
+			cout << "\nDeseja Reiniciar ?";
+			cout << "\n1 - Sim";
+			cout << "\n2 - Nao\n";
+			cin >> op;
+			return op;
+		}else{
+			
+			cout << "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n";
+			cout << "PERDEU !";
+			cout << "\nDeseja Reiniciar ?";
+			cout << "\n1 - Sim";
+			cout << "\n2 - Nao\n";
+			cin >> op;
+			return op;
+		}
+}
+
+void Menu(){
+	
+	int op = 0;
+	
+	while( op < 1 || op > 3){
+		
+		LimpaTela();
+		
+		cout << "Bem Vindo !\n";
+		cout << "\n 1 - Jogar Sozinho";
+		cout << "\n 2 - Jogar em Dupla";
+		cout << "\n 3 - Sobre";
+		cout << "\n 4 - Sair";
+		cout << "\n\nEscolha uma opcao e tecle enter: ";
+		cin >> op;
+		
+		switch (op){
+			
+			case 1:
+				//Inicia o jogo para jogar sozinho
+				
+				if(jogar(1) == 1){
+					
+					Menu();
+				}
+				
+				break;
+				
+			case 2: 
+			//Inicia o jogo para jogar em dupla
+				if(jogar(2) == 1){
+					
+					Menu();
+				}
+				break;
+		
+			case 3: 
+			//Informaçoes do jogo
+		
+			cout << "Informacoes do jogo";
+			LimpaTela();
+			cout << "Jogo desenvolvido por Thaissa Sarmento em 2023\n";
+			cout << "\n 1 - Voltar";
+			cout << "\n 2 - Sair";
+			cin >> op;
+			if(op == 1){
+			Menu();
+		}
+			break;
+			
+			case 4: 
+			
+			cout << "Tchau!!";
+			break;
+		}
+	}
+	
+}
+
+int main(int argc, char** argv) {
+	
+	// Função para gerar números aleatórios
+	srand((unsigned) time (NULL));
+	
+	Menu();	
+	
+	return 0;
+}
